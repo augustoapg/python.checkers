@@ -4,6 +4,8 @@ from .piece import Piece
 
 class Board:
     def __init__(self):
+        # 2d array, where each position is a row and each row has either a 0 when nothing is there
+        # or it has a Piece object
         self.board = []
         self.red_left = self.white_left = 12
         self.red_kings = self.white_kings = 0
@@ -42,6 +44,18 @@ class Board:
             for col in range(row % 2, ROWS, 2):
                 # in pygame we start drawing from top left
                 pygame.draw.rect(win, RED, (row*SQUARE_SIZE, col*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+
+    def evaluate(self):
+        return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+
+    def get_all_pieces(self, color):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0 and piece.color == color:
+                    pieces.append(piece)
+        
+        return pieces
 
     # update the internal list and calls move method in piece
     def move(self, piece, row, col):

@@ -1,7 +1,8 @@
 import pygame
-from checkers.constants import RED, SQUARE_SIZE, WIDTH, HEIGHT
+from checkers.constants import RED, WHITE, SQUARE_SIZE, WIDTH, HEIGHT
 from checkers.board import Board
 from checkers.game import Game
+from minimax.algorithm import minimax
 
 # constant specific to mechanic of the game
 FPS = 60
@@ -24,8 +25,15 @@ def main():
     while run:
         clock.tick(FPS)
 
+        # if it is the computer's turn
+        #! comment this if statement to make it a 2 player game (disable AI) 
+        if game.turn == WHITE:
+            value, new_board = minimax(game.get_board(), 3, WHITE, game)
+            game.ai_move(new_board)
+
         if game.winner() != None:
             print(game.winner())
+            run = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
